@@ -30,6 +30,12 @@
     <string name="prefs_instant_upload_summary">Instantly upload pictures taken by camera</string>
     <string name="prefs_instant_video_upload">Instant video uploads</string>
     <string name="prefs_instant_video_upload_summary">Instantly upload videos recorded by camera</string>
+
+    <string name="prefs_instant_document_upload">Instant document uploads</string>
+    <string name="prefs_instant_document_upload_summary">Instantly upload documents on device</string>
+    <string name="prefs_instant_music_upload">Instant Music uploads</string>
+    <string name="prefs_instant_music_upload_summary">Instantly upload Music on device</string>
+
     <string name="prefs_log_title">Enable Logging</string>
     <string name="prefs_log_summary">This is used to log problems</string>
     <string name="prefs_log_title_history">Logging History</string>
@@ -255,6 +261,8 @@
     
     <string name="instant_upload_on_wifi">Upload pictures via WiFi only</string>
     <string name="instant_video_upload_on_wifi">Upload videos via WiFi only</string>
+    <string name="instant_document_upload_on_wifi">Upload Documents via WiFi only</string>
+    <string name="instant_music_upload_on_wifi">Upload Music via WiFi only</string>
     <string name="instant_upload_path">/InstantUpload</string>
     <string name="conflict_title">Update conflict</string>
     <string name="conflict_message">Remote file %s is not synchronized with local file. Continuing will replace content of file on server.</string>
@@ -324,6 +332,8 @@
 	<string name="prefs_category_security">Security</string>
 
 	<string name="prefs_instant_video_upload_path_title">Upload Video Path</string>
+    <string name="prefs_instant_document_upload_path_title">Upload Document Path</string>
+    <string name="prefs_instant_music_upload_path_title">Upload Music Path</string>
     <string name="download_folder_failed_content">Download of %1$s folder could not be completed</string>
 
 	<string name="subject_token">%1$s shared \"%2$s\" with you</string>

@@ -50,6 +50,28 @@
 	    <com.owncloud.android.ui.CheckBoxPreferenceWithLongTitle
 	        				android:title="@string/instant_video_upload_on_wifi"
 	        				android:key="instant_video_upload_on_wifi"/>
+
+        <!-- Nelson Mods-->
+
+        <com.owncloud.android.ui.CheckBoxPreferenceWithLongTitle android:key="instant_document_uploading"
+            android:title="@string/prefs_instant_document_upload"
+            android:summary="@string/prefs_instant_document_upload_summary" />
+        <com.owncloud.android.ui.PreferenceWithLongSummary
+            android:title="@string/prefs_instant_document_upload_path_title"
+            android:key="instant_document_upload_path" />
+        <com.owncloud.android.ui.CheckBoxPreferenceWithLongTitle
+            android:title="@string/instant_document_upload_on_wifi"
+            android:key="instant_document_upload_on_wifi"/>
+
+        <com.owncloud.android.ui.CheckBoxPreferenceWithLongTitle android:key="instant_music_uploading"
+            android:title="@string/prefs_instant_music_upload"
+            android:summary="@string/prefs_instant_music_upload_summary" />
+        <com.owncloud.android.ui.PreferenceWithLongSummary
+            android:title="@string/prefs_instant_music_upload_path_title"
+            android:key="instant_music_upload_path" />
+        <com.owncloud.android.ui.CheckBoxPreferenceWithLongTitle
+            android:title="@string/instant_music_upload_on_wifi"
+            android:key="instant_music_upload_on_wifi"/>
 	    <!-- DISABLED FOR RELEASE UNTIL FIXED
 	    CheckBoxPreference android:key="log_to_file"
 	                        android:title="@string/prefs_log_title"

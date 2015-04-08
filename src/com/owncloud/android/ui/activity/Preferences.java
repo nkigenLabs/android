@@ -69,6 +69,10 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
 
     private static final int ACTION_SELECT_UPLOAD_PATH = 1;
     private static final int ACTION_SELECT_UPLOAD_VIDEO_PATH = 2;
+    /*NELSON START*/
+    private static final int ACTION_SELECT_UPLOAD_DOCUMENT_PATH = 3;
+    private static final int ACTION_SELECT_UPLOAD_MUSIC_PATH = 4;
+    /*NELSON END*/
 
     private DbHandler mDbHandler;
     private CheckBoxPreference pCode;
@@ -87,6 +91,15 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
     private Preference mPrefInstantVideoUploadPath;
     private Preference mPrefInstantVideoUploadPathWiFi;
     private String mUploadVideoPath;
+    /*Nelson modifications*/
+    private Preference mPrefInstantDocumentUpload;
+    private Preference mPrefInstantDocumentUploadPath;
+    private Preference mPrefInstantDocumentUploadPathWiFi;
+    private String mUploadDocumentPath;
+    private Preference mPrefInstantMusicUpload;
+    private Preference mPrefInstantMusicUploadPath;
+    private Preference mPrefInstantMusicUploadPathWiFi;
+    private String mUploadMusicPath;
 
 
     @SuppressWarnings("deprecation")
@@ -199,6 +212,7 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
                         String username = currentAccount.name.substring(0, currentAccount.name.lastIndexOf('@'));
                         
                         String recommendSubject = String.format(getString(R.string.recommend_subject), appName);
+                        /**TODO:Find the error **/
                         String recommendText = String.format(getString(R.string.recommend_text), appName, downloadUrl, username);
                         
                         intent.putExtra(Intent.EXTRA_SUBJECT, recommendSubject);
@@ -326,6 +340,69 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
                 return true;
             }
         });
+
+        /**NELSON START**/
+        mPrefInstantDocumentUploadPath =  findPreference("instant_document_upload_path");
+        if (mPrefInstantDocumentUploadPath != null){
+
+            mPrefInstantDocumentUploadPath.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (!mUploadDocumentPath.endsWith(OCFile.PATH_SEPARATOR)) {
+                        mUploadDocumentPath += OCFile.PATH_SEPARATOR;
+                    }
+                    /*TODO: COnfirm this*/
+                    Intent intent = new Intent(Preferences.this, UploadPathActivity.class);
+                    intent.putExtra(UploadPathActivity.KEY_INSTANT_UPLOAD_PATH, mUploadDocumentPath);
+                    startActivityForResult(intent, ACTION_SELECT_UPLOAD_DOCUMENT_PATH);
+                    return true;
+                }
+            });
+        }
+
+        mPrefInstantDocumentUploadPathWiFi =  findPreference("instant_document_upload_on_wifi");
+        mPrefInstantDocumentUpload = findPreference("instant_document_uploading");
+        toggleInstantDocumentOptions(((CheckBoxPreference) mPrefInstantDocumentUpload).isChecked());
+
+        mPrefInstantDocumentUpload.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                toggleInstantDocumentOptions((Boolean) newValue);
+                return true;
+            }
+        });
+
+        mPrefInstantMusicUploadPath =  findPreference("instant_music_upload_path");
+        if (mPrefInstantMusicUploadPath != null){
+
+            mPrefInstantMusicUploadPath.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (!mUploadMusicPath.endsWith(OCFile.PATH_SEPARATOR)) {
+                        mUploadVideoPath += OCFile.PATH_SEPARATOR;
+                    }
+                    Intent intent = new Intent(Preferences.this, UploadPathActivity.class);
+                    intent.putExtra(UploadPathActivity.KEY_INSTANT_UPLOAD_PATH, mUploadMusicPath);
+                    startActivityForResult(intent, ACTION_SELECT_UPLOAD_MUSIC_PATH);
+                    return true;
+                }
+            });
+        }
+
+        mPrefInstantMusicUploadPathWiFi =  findPreference("instant_video_upload_on_wifi");
+        mPrefInstantMusicUpload = findPreference("instant_video_uploading");
+        toggleInstantMusicOptions(((CheckBoxPreference) mPrefInstantMusicUpload).isChecked());
+
+        mPrefInstantMusicUpload.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                toggleInstantMusicOptions((Boolean) newValue);
+                return true;
+            }
+        });
+        /**NELSON END**/
             
         /* About App */
        pAboutApp = (Preference) findPreference("about_app");
@@ -336,7 +413,8 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
 
        loadInstantUploadPath();
        loadInstantUploadVideoPath();
-
+        loadInstantUploadDocumentPath();
+        loadInstantUploadMusicPath();
     }
     
     private void toggleInstantPictureOptions(Boolean value){
@@ -356,6 +434,25 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
         } else {
             mPrefInstantUploadCategory.removePreference(mPrefInstantVideoUploadPathWiFi);
             mPrefInstantUploadCategory.removePreference(mPrefInstantVideoUploadPath);
+        }
+    }
+
+    private void toggleInstantDocumentOptions(Boolean value){
+        if (value){
+            mPrefInstantUploadCategory.addPreference(mPrefInstantDocumentUploadPathWiFi);
+            mPrefInstantUploadCategory.addPreference(mPrefInstantDocumentUploadPath);
+        } else {
+            mPrefInstantUploadCategory.removePreference(mPrefInstantDocumentUploadPathWiFi);
+            mPrefInstantUploadCategory.removePreference(mPrefInstantDocumentUploadPath);
+        }
+    }
+    private void toggleInstantMusicOptions(Boolean value){
+        if (value){
+            mPrefInstantUploadCategory.addPreference(mPrefInstantMusicUploadPathWiFi);
+            mPrefInstantUploadCategory.addPreference(mPrefInstantMusicUploadPath);
+        } else {
+            mPrefInstantUploadCategory.removePreference(mPrefInstantMusicUploadPathWiFi);
+            mPrefInstantUploadCategory.removePreference(mPrefInstantMusicUploadPath);
         }
     }
 
@@ -488,7 +585,33 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
             mPrefInstantVideoUploadPath.setSummary(mUploadVideoPath);
 
             saveInstantUploadVideoPathOnPreferences();
+            /*NELSON BEGIN*/
+        }else if (requestCode == ACTION_SELECT_UPLOAD_DOCUMENT_PATH && resultCode == RESULT_OK){
+
+            OCFile folderToUploadDocument = (OCFile) data.getParcelableExtra(UploadPathActivity.EXTRA_FOLDER);
+
+            mUploadDocumentPath = folderToUploadDocument.getRemotePath();
+
+            mUploadDocumentPath = DisplayUtils.getPathWithoutLastSlash(mUploadDocumentPath);
+
+            // Show the video path on summary preference
+            mPrefInstantDocumentUploadPath.setSummary(mUploadDocumentPath);
+
+            saveInstantUploadDocumentPathOnPreferences();
+        }else if (requestCode == ACTION_SELECT_UPLOAD_MUSIC_PATH && resultCode == RESULT_OK){
+
+            OCFile folderToUploadDocument = (OCFile) data.getParcelableExtra(UploadPathActivity.EXTRA_FOLDER);
+
+            mUploadMusicPath = folderToUploadDocument.getRemotePath();
+
+            mUploadMusicPath = DisplayUtils.getPathWithoutLastSlash(mUploadMusicPath);
+
+            // Show the video path on summary preference
+            mPrefInstantMusicUploadPath.setSummary(mUploadMusicPath);
+
+            saveInstantUploadMusicPathOnPreferences();
         }
+        /*NELSON END*/
     }
 
     @Override
@@ -637,4 +760,43 @@ public class Preferences extends SherlockPreferenceActivity implements AccountMa
         editor.putString("instant_video_upload_path", mUploadVideoPath);
         editor.commit();
     }
+
+/*NELSON BEGIN*/
+    /**
+     * Load upload video path set on preferences
+     */
+    private void loadInstantUploadDocumentPath() {
+        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mUploadDocumentPath = appPrefs.getString("instant_document_upload_path", getString(R.string.instant_upload_path));
+        mPrefInstantDocumentUploadPath.setSummary(mUploadDocumentPath);
+    }
+
+    /**
+     * Save the "Instant Video Upload Path" on preferences
+     */
+    private void saveInstantUploadDocumentPathOnPreferences() {
+        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = appPrefs.edit();
+        editor.putString("instant_document_upload_path", mUploadDocumentPath);
+        editor.commit();
+    }
+
+    private void loadInstantUploadMusicPath() {
+        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mUploadMusicPath = appPrefs.getString("instant_music_upload_path", getString(R.string.instant_upload_path));
+        mPrefInstantMusicUploadPath.setSummary(mUploadMusicPath);
+    }
+
+    /**
+     * Save the "Instant Video Upload Path" on preferences
+     */
+    private void saveInstantUploadMusicPathOnPreferences() {
+        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = appPrefs.edit();
+        editor.putString("instant_music_upload_path", mUploadMusicPath);
+        editor.commit();
+    }
+/*NELSON END*/
+
+
 }
